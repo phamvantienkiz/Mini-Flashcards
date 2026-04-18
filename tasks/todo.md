@@ -5,7 +5,16 @@
 - [x] Analyze tech stack (Next.js, TS, Tailwind, FastAPI, SQLite/PostgreSQL)
 - [x] Update `GEMINI.md` with Project Context
 - [x] Analyze and Write PRD/SRS for Phase 1
-- [ ] Initialize Next.js frontend
+- [x] Initialize Next.js frontend
+    - [x] Scaffold Next.js 14 project in `frontend/` (TS, Tailwind, App Router)
+    - [x] Configure custom Design System (Stone/Indigo palette, Typography)
+    - [x] Setup core folder structure (`app/`, `components/`, `lib/`, `services/`, etc.)
+    - [x] Implement type-safe API client and services
+    - [x] Build core UI components (3D Flashcard, Bottom Navigation)
+    - [x] Implement Dashboard (Word list, Search, Stats)
+    - [x] Implement "Create Flashcard" module
+    - [x] Implement Quiz & Writing learning modules
+    - [x] Verify UI responsiveness and backend integration
 - [x] Initialize FastAPI backend
     - [x] Initialize `uv` project in `backend/`
     - [x] Add dependencies (`fastapi`, `uvicorn[standard]`, `sqlalchemy`, `alembic`, `pydantic-settings`)

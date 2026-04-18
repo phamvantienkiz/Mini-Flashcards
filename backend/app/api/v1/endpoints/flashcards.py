@@ -14,7 +14,7 @@ from app.schemas.flashcard import (
 
 router = APIRouter()
 
-@router.get("/", response_model=FlashcardListResponse)
+@router.get("", response_model=FlashcardListResponse)
 def list_flashcards(
     offset: int = 0,
     limit: int = 20,
@@ -28,13 +28,19 @@ def list_flashcards(
         pagination=Pagination(total=total, offset=offset, limit=limit)
     )
 
-@router.post("/", response_model=Flashcard, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=Flashcard, status_code=status.HTTP_201_CREATED)
 def create_flashcard(
     obj_in: FlashcardCreate,
     db: Session = Depends(get_db)
 ):
     service = FlashcardService(db)
     return service.create_flashcard(obj_in)
+
+@router.get("/stats")
+def get_stats(db: Session = Depends(get_db)):
+    service = FlashcardService(db)
+    _, total = service.get_flashcards(limit=0)
+    return {"total_count": total}
 
 @router.get("/{id}", response_model=Flashcard)
 def get_flashcard(
@@ -68,9 +74,3 @@ def delete_flashcard(
     if not service.delete_flashcard(id):
         raise HTTPException(status_code=404, detail="Flashcard not found")
     return None
-
-@router.get("/stats")
-def get_stats(db: Session = Depends(get_db)):
-    service = FlashcardService(db)
-    _, total = service.get_flashcards(limit=0)
-    return {"total_count": total}
