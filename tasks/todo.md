@@ -6,7 +6,24 @@
 - [x] Update `GEMINI.md` with Project Context
 - [x] Analyze and Write PRD/SRS for Phase 1
 - [ ] Initialize Next.js frontend
-- [ ] Initialize FastAPI backend
+- [x] Initialize FastAPI backend
+    - [x] Initialize `uv` project in `backend/`
+    - [x] Add dependencies (`fastapi`, `uvicorn[standard]`, `sqlalchemy`, `alembic`, `pydantic-settings`)
+    - [x] Create `.env` from `.env.example`
+    - [x] Setup folder structure as per `docs/backend-document.md`
+    - [x] Implement Core configuration (`app/core/config.py`)
+    - [x] Setup Database session (`app/db/session.py` and `app/db/base.py`)
+    - [x] Implement Flashcard Model (`app/models/flashcard.py`)
+    - [x] Initialize Alembic and create initial migration
+    - [x] Implement Flashcard Schemas (`app/schemas/flashcard.py`)
+    - [x] Implement Flashcard Repository (`app/repositories/flashcard_repo.py`)
+    - [x] Implement Flashcard Service (`app/services/flashcard_service.py`)
+    - [x] Implement Learning Service (`app/services/learning_service.py` for Quiz/Writing)
+    - [x] Implement API Endpoints (`flashcards.py`, `learning.py`, `health.py`)
+    - [x] Implement API Router (`app/api/v1/router.py`)
+    - [x] Implement Global Exception Handlers (RFC 7807)
+    - [x] Complete `app/main.py` entry point
+    - [x] Verify backend functionality via Swagger UI
 - [ ] Setup initial project structure
 
 ---
@@ -15,3 +32,5 @@
 
 - 2026-04-18: Project analysis and initialization. Updated `GEMINI.md` with tech stack details.
 - 2026-04-18: Completed analysis and drafted PRD/SRS for Phase 1 in `docs/project-requirements-document.md`.
+- 2026-04-18: Proposed detailed backend implementation plan using `uv` and Layered Architecture.
+- 2026-04-18: Successfully initialized FastAPI backend with `uv`, SQLAlchemy, Alembic, and implemented core features (CRUD, Quiz, Writing) following Layered Architecture.

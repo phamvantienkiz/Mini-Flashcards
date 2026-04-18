@@ -1,21 +1,19 @@
 # Goal:
 
-Phân tích và viết tài liệu PRD/SRS hoàn chỉnh cho phase 1 dự án - Tạo nhanh trang flashcard.
+Phát triển hoàn thiện phần backend dự án.
 
 ## Context:
 
-Các chức năng bao gồm:
+Hiện tại trong repo dự án này, backend và frontend được tách thành 2 thư mục riêng biệt @backend/ và @frontend/ dụng ý là để sau này nếu có triển khai sẽ triển khai như 2 services riêng biệt.
 
-- Tạo và sử dụng flashcard
-- Xem danh sách từ vựng được tạo
-- Tạo bài tập trắc nghiệm tự trên danh sách từ vựng được tạo (chọn 4 đáp án A, B, C, or D)
-- Tạo bài tập viết tiếng Anh của từ vựng dựa trên nghĩa tiếng Việt được cho
+Các file document cần thiết cho phía backend bao gồm: @./docs/api-design-document.md , @./docs/backend-document.md và @./project-requirements-document.md
 
 ### Request:
 
-Phân tích đầy đủ và chi tiết các yêu cầu trên sau đó viết PRD vào file @./docs/project-requirements-document.md
+Bước vào `plan mode` và thực hiện phân tích và lên kế hoạch cho việc phát triển hoàn thiện phần backend, lưu ý một số thông tin sau:
 
-> Quá trình phân tích có thể tham khảo các hướng dẫn trong @./.gemini/project-skills/business-analyst/SKILL.md , @./.gemini/project-skills/business-analyst/references/technical-writer.md và @./.gemini/project-skills/business-analyst/references/ux-researcher.md
+- Sử dụng uv để quản lý phần backend -> kiểm tra và tạo các file cần thiết. (trong @./backend/ đã có file môi trường `.venv`)
+- Cần lên plan chi tiết và thêm vào @todo.md (đúng theo yêu cầu trong file @./GEMINI.md). Hiện tại file @todo.md đang có các task, hãy chỉnh sửa hợp lý và thêm các task mới của plan vào. Phần này được tính là "Initialize FastAPI backend".
 
 ---
 
