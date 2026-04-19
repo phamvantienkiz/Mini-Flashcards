@@ -1,14 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { ArrowLeft, Loader2, CheckCircle2 } from "lucide-react";
 import { flashcardService } from "@/services/flashcard-service";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function CreateFlashcard() {
-  const router = useRouter();
   const [english, setEnglish] = useState("");
   const [vietnamese, setVietnamese] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -119,7 +117,7 @@ export default function CreateFlashcard() {
                 )}
               </button>
               <p className="text-center text-[12px] text-foreground/40">
-                Press <kbd className="font-sans px-1.5 py-0.5 bg-black/5 rounded-[4px]">⌘ + Enter</kbd> to save quickly.
+                Press <kbd className="font-sans px-1.5 py-0.5 bg-black/5 rounded">⌘ + Enter</kbd> to save quickly.
               </p>
             </div>
           </form>
@@ -133,7 +131,7 @@ export default function CreateFlashcard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="fixed top-20 left-1/2 -translate-x-1/2 z-[60] bg-white border border-black/5 px-6 py-4 rounded-apple flex items-center gap-4 apple-shadow"
+            className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-white border border-black/5 px-6 py-4 rounded-apple flex items-center gap-4 apple-shadow"
           >
             <div className="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center text-white">
               <CheckCircle2 className="w-6 h-6" />
