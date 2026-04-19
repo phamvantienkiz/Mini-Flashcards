@@ -40,84 +40,91 @@ export default function CreateFlashcard() {
   };
 
   return (
-    <main className="flex-1 w-full max-w-2xl mx-auto px-6 pt-12">
-      <Link
-        href="/"
-        className="inline-flex items-center gap-2 text-stone-500 hover:text-stone-900 transition-colors mb-12 group"
-      >
-        <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-        <span className="text-sm font-medium uppercase tracking-widest">
-          Back to Collection
-        </span>
-      </Link>
-
-      <div className="mb-12">
-        <h1 className="text-4xl md:text-5xl font-serif text-foreground mb-4">
-          Add Flashcard
-        </h1>
-        <p className="text-stone-500 font-sans">
-          Build your vocabulary one word at a time.
-        </p>
-      </div>
-
-      <form onSubmit={handleSubmit} className="space-y-12" onKeyDown={handleKeyDown}>
-        <div className="space-y-2">
-          <label
-            htmlFor="english"
-            className="text-stone-400 text-xs font-medium uppercase tracking-widest"
+    <main className="flex-1 w-full">
+      {/* Header - Dark */}
+      <section className="bg-black text-white pt-24 pb-16 px-6">
+        <div className="max-w-2xl mx-auto">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-white/40 hover:text-white transition-colors mb-8 group"
           >
-            English Word
-          </label>
-          <input
-            id="english"
-            type="text"
-            placeholder="e.g. Ephemeral"
-            autoFocus
-            className="w-full bg-transparent border-b-2 border-stone-200 py-4 text-3xl md:text-4xl font-serif focus:outline-none focus:border-primary transition-colors placeholder:text-stone-200"
-            value={english}
-            onChange={(e) => setEnglish(e.target.value)}
-            required
-          />
-        </div>
-
-        <div className="space-y-2">
-          <label
-            htmlFor="vietnamese"
-            className="text-stone-400 text-xs font-medium uppercase tracking-widest"
-          >
-            Vietnamese Meaning
-          </label>
-          <input
-            id="vietnamese"
-            type="text"
-            placeholder="e.g. Phù du, chóng tàn"
-            className="w-full bg-transparent border-b-2 border-stone-200 py-4 text-xl md:text-2xl font-sans focus:outline-none focus:border-primary transition-colors placeholder:text-stone-200"
-            value={vietnamese}
-            onChange={(e) => setVietnamese(e.target.value)}
-            required
-          />
-        </div>
-
-        <div className="pt-6 flex flex-col gap-4">
-          <button
-            type="submit"
-            disabled={!english || !vietnamese || isSubmitting}
-            className="w-full bg-primary text-white py-4 rounded-2xl font-medium shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:scale-100 disabled:shadow-none flex items-center justify-center gap-2"
-          >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="w-5 h-5 animate-spin" />
-                Saving...
-              </>
-            ) : (
-              "Save Flashcard"
-            )}
-          </button>
-          <p className="text-center text-xs text-stone-400">
-            Press <kbd className="font-sans px-1 bg-stone-100 rounded">⌘ + Enter</kbd> to save quickly.
+            <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+            <span className="text-[12px] font-semibold uppercase tracking-tight">
+              Collection
+            </span>
+          </Link>
+          <h1 className="text-5xl md:text-6xl font-semibold mb-4 tracking-tighter">
+            Add Flashcard
+          </h1>
+          <p className="text-white/60 text-[21px] font-normal tracking-tight">
+            Build your vocabulary one word at a time.
           </p>
         </div>
-      </form>
+      </section>
+
+      {/* Form Area - Light Gray */}
+      <section className="bg-apple-gray py-20 px-6 min-h-[50vh]">
+        <div className="max-w-2xl mx-auto">
+          <form onSubmit={handleSubmit} className="space-y-16" onKeyDown={handleKeyDown}>
+            <div className="space-y-4">
+              <label
+                htmlFor="english"
+                className="text-foreground/40 text-[12px] font-semibold uppercase tracking-tight"
+              >
+                English Word
+              </label>
+              <input
+                id="english"
+                type="text"
+                placeholder="e.g. Ephemeral"
+                autoFocus
+                className="w-full bg-transparent border-b border-foreground/10 py-4 text-4xl md:text-5xl font-semibold focus:outline-none focus:border-primary transition-colors placeholder:text-foreground/10 tracking-tighter"
+                value={english}
+                onChange={(e) => setEnglish(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="space-y-4">
+              <label
+                htmlFor="vietnamese"
+                className="text-foreground/40 text-[12px] font-semibold uppercase tracking-tight"
+              >
+                Vietnamese Meaning
+              </label>
+              <input
+                id="vietnamese"
+                type="text"
+                placeholder="e.g. Phù du, chóng tàn"
+                className="w-full bg-transparent border-b border-foreground/10 py-4 text-2xl md:text-3xl font-medium focus:outline-none focus:border-primary transition-colors placeholder:text-foreground/10 tracking-tight"
+                value={vietnamese}
+                onChange={(e) => setVietnamese(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="pt-10 flex flex-col gap-6">
+              <button
+                type="submit"
+                disabled={!english || !vietnamese || isSubmitting}
+                className="apple-button-primary w-full py-4 text-[17px] font-semibold disabled:opacity-30 disabled:scale-100 flex items-center justify-center gap-2"
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  "Save Flashcard"
+                )}
+              </button>
+              <p className="text-center text-[12px] text-foreground/40">
+                Press <kbd className="font-sans px-1.5 py-0.5 bg-black/5 rounded-[4px]">⌘ + Enter</kbd> to save quickly.
+              </p>
+            </div>
+          </form>
+        </div>
+      </section>
 
       {/* Success Notification */}
       <AnimatePresence>
@@ -126,14 +133,14 @@ export default function CreateFlashcard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="fixed top-12 left-1/2 -translate-x-1/2 z-[60] glass border-emerald-500/20 px-6 py-4 rounded-2xl flex items-center gap-3 shadow-xl"
+            className="fixed top-20 left-1/2 -translate-x-1/2 z-[60] bg-white border border-black/5 px-6 py-4 rounded-apple flex items-center gap-4 apple-shadow"
           >
-            <div className="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center text-white">
-              <CheckCircle2 className="w-5 h-5" />
+            <div className="w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center text-white">
+              <CheckCircle2 className="w-6 h-6" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-stone-900">Saved!</p>
-              <p className="text-xs text-stone-500">Card added to your collection.</p>
+              <p className="text-[17px] font-semibold text-foreground">Saved!</p>
+              <p className="text-[14px] text-foreground/60">Card added to your collection.</p>
             </div>
           </motion.div>
         )}

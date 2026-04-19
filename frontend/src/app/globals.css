@@ -1,87 +1,123 @@
 @import "tailwindcss";
 
 @theme inline {
-  /* Colors - Stone & Indigo Palette */
-  --color-stone-50: #fafaf9;
-  --color-stone-100: #f5f5f4;
-  --color-stone-200: #e7e5e4;
-  --color-stone-300: #d6d3d1;
-  --color-stone-400: #a8a29e;
-  --color-stone-500: #78716c;
-  --color-stone-600: #57534e;
-  --color-stone-700: #44403c;
-  --color-stone-800: #292524;
-  --color-stone-900: #1c1917;
-  --color-stone-950: #0c0a09;
-
-  --color-indigo-50: #eef2ff;
-  --color-indigo-100: #e0e7ff;
-  --color-indigo-200: #c7d2fe;
-  --color-indigo-300: #a5b4fc;
-  --color-indigo-400: #818cf8;
-  --color-indigo-500: #6366f1;
-  --color-indigo-600: #4f46e5;
-  --color-indigo-700: #4338ca;
-  --color-indigo-800: #3730a3;
-  --color-indigo-900: #312e81;
-  --color-indigo-950: #1e1b4b;
-
-  --color-emerald-500: #10b981;
-  --color-rose-500: #f43f5e;
-
+  /* Apple Color Palette */
+  --color-apple-blue: #0071e3;
+  --color-apple-link: #0066cc;
+  --color-apple-link-dark: #2997ff;
+  --color-apple-gray: #f5f5f7;
+  --color-apple-near-black: #1d1d1f;
+  
   /* UI Tokens */
-  --color-background: var(--stone-50);
-  --color-foreground: var(--stone-950);
-  --color-primary: var(--indigo-600);
-  --color-surface: #ffffff;
-  --color-border: var(--stone-200);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--color-apple-blue);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
 
   /* Fonts */
-  --font-sans: var(--font-geist-sans);
-  --font-serif: var(--font-instrument-serif);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-sans);
 
   /* Radius */
-  --radius-2xl: 16px;
+  --radius-apple: 8px;
+  --radius-pill: 980px;
 }
 
 :root {
-  --background: #fafaf9;
-  --foreground: #0c0a09;
+  --background: #f5f5f7;
+  --foreground: #1d1d1f;
   --surface: #ffffff;
-  --primary: #4f46e5;
-  --border: #e7e5e4;
+  --primary: #0071e3;
+  --border: rgba(0, 0, 0, 0.1);
+  
+  /* Apple Typography Defaults */
+  --tracking-tight: -0.011em;
+  --tracking-tighter: -0.022em;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0c0a09;
-    --foreground: #fafaf9;
-    --surface: #1c1917;
-    --primary: #818cf8;
-    --border: #292524;
-  }
+.dark {
+  --background: #000000;
+  --foreground: #ffffff;
+  --surface: #1d1d1f;
+  --primary: #0071e3;
+  --border: rgba(255, 255, 255, 0.1);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  letter-spacing: var(--tracking-tight);
 }
 
-/* Glassmorphism utility */
-.glass {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+/* Apple Design System Utilities */
+
+.apple-glass {
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
 }
 
-.dark .glass {
-  background: rgba(12, 10, 9, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+.apple-glass-light {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+
+.apple-shadow {
+  box-shadow: rgba(0, 0, 0, 0.22) 3px 5px 30px 0px;
+}
+
+.apple-button-primary {
+  background-color: var(--color-apple-blue);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 400;
+  transition: all 0.2s ease;
+}
+
+.apple-button-primary:hover {
+  background-color: #0077ed;
+}
+
+.apple-button-primary:active {
+  background-color: #0062c3;
+  transform: scale(0.98);
+}
+
+.apple-link-pill {
+  color: var(--color-apple-link);
+  border: 1px solid var(--color-apple-link);
+  padding: 8px 16px;
+  border-radius: 980px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.apple-link-pill:hover {
+  background-color: var(--color-apple-link);
+  color: white;
+}
+
+.dark .apple-link-pill {
+  color: var(--color-apple-link-dark);
+  border-color: var(--color-apple-link-dark);
+}
+
+.dark .apple-link-pill:hover {
+  background-color: var(--color-apple-link-dark);
+  color: black;
+}
+
+/* Tight Headline Typography */
+h1, h2, h3 {
+  letter-spacing: var(--tracking-tighter);
+  line-height: 1.1;
+  font-weight: 600;
 }
 
 /* 3D Utilities */

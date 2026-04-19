@@ -1,23 +1,6 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import "./globals.css";
-import { BottomNav } from "@/components/shared/BottomNav";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const instrumentSerif = Instrument_Serif({
-  variable: "--font-instrument-serif",
-  weight: "400",
-  subsets: ["latin"],
-});
+import { TopNav } from "@/components/shared/TopNav";
 
 export const metadata: Metadata = {
   title: "Mini Flashcards",
@@ -32,11 +15,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} h-full antialiased`}
+      className="h-full antialiased"
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground pb-32">
+      <body className="min-h-full flex flex-col bg-background text-foreground pt-12">
+        <TopNav />
         {children}
-        <BottomNav />
       </body>
     </html>
   );
