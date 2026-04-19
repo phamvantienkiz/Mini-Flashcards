@@ -35,7 +35,9 @@ export default function QuizPage() {
   }, []);
 
   useEffect(() => {
-    fetchQuiz();
+    Promise.resolve().then(() => {
+      fetchQuiz();
+    });
   }, [fetchQuiz]);
 
   const handleAnswer = (option: string) => {
