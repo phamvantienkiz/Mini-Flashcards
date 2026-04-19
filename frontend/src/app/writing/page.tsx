@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, RefreshCcw, X, Check, ArrowRight, Home } from "lucide-react";
+import { Loader2, RefreshCcw, X, ArrowRight, Home } from "lucide-react";
 import { learningService } from "@/services/learning-service";
 import { WritingPrompt } from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
@@ -21,11 +21,7 @@ export default function WritingPage() {
   const [isFinished, setIsFinished] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    fetchWriting();
-  }, []);
-
-  const fetchWriting = async () => {
+  const fetchWriting = useCallback(async () => {
     setLoading(true);
     try {
       const data = await learningService.getWriting();
@@ -41,7 +37,14 @@ export default function WritingPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchWriting();
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [fetchWriting]);
 
   const handleSubmit = (e?: React.FormEvent) => {
     e?.preventDefault();
