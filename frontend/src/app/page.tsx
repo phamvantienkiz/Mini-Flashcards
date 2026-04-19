@@ -34,76 +34,97 @@ export default function Dashboard() {
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  return (
-    <main className="flex-1 w-full max-w-5xl mx-auto px-6 pt-12">
-      {/* Header & Stats */}
-      <section className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div>
-          <h1 className="text-4xl md:text-5xl font-serif text-foreground mb-2">
-            My Collection
-          </h1>
-          <p className="text-stone-500 font-sans">
-            You have mastered{" "}
-            <span className="text-stone-900 font-semibold">
-              {stats?.total_count || 0}
-            </span>{" "}
-            words so far.
-          </p>
-        </div>
+  const handleDelete = async (id: string) => {
+    try {
+      await flashcardService.delete(id);
+      setFlashcards((prev) => prev.filter((card) => card.id !== id));
+      if (stats) {
+        setStats({ ...stats, total_count: stats.total_count - 1 });
+      }
+    } catch (error) {
+      console.error("Failed to delete flashcard:", error);
+      alert("Failed to delete flashcard. Please try again.");
+    }
+  };
 
-        {/* Search Bar */}
-        <div className="relative group max-w-sm w-full">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 transition-colors group-focus-within:text-primary" />
-          <input
-            type="text"
-            placeholder="Search words..."
-            className="w-full pl-11 pr-4 py-3 bg-surface border border-border rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all font-sans"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
+  return (
+    <main className="flex-1 w-full">
+      {/* Hero Section - Dark */}
+      <section className="bg-black text-white pt-24 pb-16 px-6">
+        <div className="max-w-5xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-8">
+          <div>
+            <h1 className="text-5xl md:text-6xl font-semibold mb-4 tracking-tighter">
+              My Collection
+            </h1>
+            <p className="text-white/60 text-[21px] font-normal tracking-tight">
+              You have mastered{" "}
+              <span className="text-white font-semibold">
+                {stats?.total_count || 0}
+              </span>{" "}
+              words so far.
+            </p>
+          </div>
+
+          {/* Search Bar */}
+          <div className="relative group max-w-sm w-full">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 transition-colors group-focus-within:text-white" />
+            <input
+              type="text"
+              placeholder="Search words..."
+              className="w-full pl-11 pr-4 py-2.5 bg-white/10 border border-white/10 rounded-[11px] text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
         </div>
       </section>
 
-      {/* Word Grid */}
-      {loading ? (
-        <div className="flex flex-col items-center justify-center py-20 gap-4">
-          <Loader2 className="w-8 h-8 text-primary animate-spin" />
-          <p className="text-stone-500 animate-pulse">Loading collection...</p>
-        </div>
-      ) : flashcards.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {flashcards.map((card) => (
-            <FlashcardComponent
-              key={card.id}
-              english={card.english}
-              vietnamese={card.vietnamese}
-              className="mx-auto"
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="flex flex-col items-center justify-center py-20 px-6 text-center border-2 border-dashed border-stone-200 rounded-3xl">
-          <div className="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mb-6">
-            <PlusCircle className="w-8 h-8 text-stone-400" />
-          </div>
-          <h3 className="text-xl font-serif text-foreground mb-2">
-            No flashcards found
-          </h3>
-          <p className="text-stone-500 max-w-xs mb-8">
-            {searchQuery
-              ? `No results for "${searchQuery}". Try a different search term.`
-              : "Your collection is empty. Start adding some words to begin your journey."}
-          </p>
-          {!searchQuery && (
-            <Link
-              href="/create"
-              className="bg-primary text-white px-8 py-3 rounded-2xl font-medium shadow-lg shadow-primary/20 hover:scale-105 transition-transform"
-            >
-              Add First Card
-            </Link>
+      {/* Word Grid - Light Gray */}
+      <section className="bg-apple-gray py-20 px-6 min-h-[60vh]">
+        <div className="max-w-5xl mx-auto">
+          {loading ? (
+            <div className="flex flex-col items-center justify-center py-20 gap-4">
+              <Loader2 className="w-8 h-8 text-primary animate-spin" />
+              <p className="text-foreground/60 animate-pulse">Loading collection...</p>
+            </div>
+          ) : flashcards.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
+              {flashcards.map((card) => (
+                <FlashcardComponent
+                  key={card.id}
+                  id={card.id}
+                  english={card.english}
+                  vietnamese={card.vietnamese}
+                  onDelete={handleDelete}
+                  className="mx-auto"
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-24 px-6 text-center">
+              <div className="w-20 h-20 bg-black/5 rounded-full flex items-center justify-center mb-8">
+                <PlusCircle className="w-10 h-10 text-foreground/20" />
+              </div>
+              <h3 className="text-3xl font-semibold text-foreground mb-4 tracking-tighter">
+                No flashcards found
+              </h3>
+              <p className="text-[17px] text-foreground/60 max-w-sm mb-10 leading-relaxed">
+                {searchQuery
+                  ? `No results for "${searchQuery}". Try a different search term.`
+                  : "Your collection is empty. Start adding some words to begin your journey."}
+              </p>
+              {!searchQuery && (
+                <Link
+                  href="/create"
+                  className="apple-button-primary scale-110"
+                >
+                  Add First Card
+                </Link>
+              )}
+            </div>
           )}
         </div>
-      )}
+      </section>
     </main>
   );
 }

@@ -1,54 +1,16 @@
 # Goal:
 
-Fix triệt để các lỗi
+Chỉnh sửa một só phần để UX hoàn hảo hơn.
 
 ## Context:
 
-Phần frontend và backend đã hoàn thiện và cả 2 đều đã run được nhưng khi test thực tế trên web thì xảy ra lỗi khi chuyển sang phần Quiz và Writing. Cụ thể các lỗi được báo trong terminal như sau:
-
-- frontend terminal:
-
-```bash
-[browser] Failed to fetch quiz: Error: [object Object]
-    at apiClient (src/lib/api-client.ts:19:11)
-    at async fetchQuiz (src/app/quiz/page.tsx:29:20)
-  17 |   if (!response.ok) {
-  18 |     const errorBody = await response.json().catch(() => ({}));
-> 19 |     throw new Error(errorBody.detail || "Something went wrong");
-     |           ^
-  20 |   }
-  21 |
-  22 |   if (response.status === 204) { (src/app/quiz/page.tsx:37:15)
- GET /writing 200 in 530ms (next.js: 486ms, application-code: 43ms)
-[browser] Failed to fetch writing practice: Error: [object Object]
-    at apiClient (src/lib/api-client.ts:19:11)
-    at async fetchWriting (src/app/writing/page.tsx:31:20)
-  17 |   if (!response.ok) {
-  18 |     const errorBody = await response.json().catch(() => ({}));
-> 19 |     throw new Error(errorBody.detail || "Something went wrong");
-     |           ^
-  20 |   }
-  21 |
-  22 |   if (response.status === 204) { (src/app/writing/page.tsx:40:15)
-```
-
-- backend terminal:
-
-```bash
-INFO:     127.0.0.1:63156 - "GET /api/v1/flashcards/stats HTTP/1.1" 200 OK
-INFO:     127.0.0.1:54099 - "GET /api/v1/flashcards/quiz HTTP/1.1" 422 Unprocessable Entity
-INFO:     127.0.0.1:54099 - "GET /api/v1/flashcards/quiz HTTP/1.1" 422 Unprocessable Entity
-INFO:     127.0.0.1:54099 - "OPTIONS /api/v1/flashcards/writing HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50023 - "OPTIONS /api/v1/flashcards/writing HTTP/1.1" 200 OK
-INFO:     127.0.0.1:50023 - "GET /api/v1/flashcards/writing HTTP/1.1" 422 Unprocessable Entity
-INFO:     127.0.0.1:54099 - "GET /api/v1/flashcards/writing HTTP/1.1" 422 Unprocessable Entity
-```
+- Ở page `Quiz` cần thiết kế lại để phần 4 đáp án trả lời xếp thành gird 2 hàng 2 cột thay vì 4 hàng 1 cột như hiện tại.
+- Thêm nữa, phần chiều cao của các phần cũng cần tính toán lại để cả phần question lẫn phần chọn đáp án nằm gọn trong screen page trong các màn hình laptop có kích thước tiêu chuẩn có tỉ lệ 16:9.
+  -> Khi này việc trải nghiệm `Quiz` tốt hơn rất nhiều khi không phải kéo (cuộn) chuột để chọn đáp án và next question.
 
 ### Request:
 
-Kiểm tra xem lỗi cụ thể ở phần nào và tiến hành phân tích và fix lỗi phù hợp.
-
--> Sau khi đã fix lỗi hãy tóm tắt cho tôi nguyên nhân và các khắc phục đã thực hiện.
+Phân tích và lên kế hoạch để thực hiện các thay đổi về UX-UI nhằm tăng trải nghiệm người dùng.
 
 ---
 
