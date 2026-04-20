@@ -35,7 +35,6 @@ ENV/
 *.db
 .pytest_cache/
 .mypy_cache/
-<<<<<<< HEAD
 
 #user specific files
 .gemini/
@@ -44,6 +43,4 @@ GEMINI.md
 SKILL_GUIDE.md
 gemini_guide.md
 tasks/
-=======
 setupclaude.md
->>>>>>> Jin
