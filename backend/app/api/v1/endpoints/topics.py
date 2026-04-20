@@ -7,7 +7,7 @@ from typing import List
 
 router = APIRouter()
 
-@router.get("/", response_model=List[Topic])
+@router.get("", response_model=List[Topic])
 def read_topics(
     offset: int = 0,
     limit: int = 100,
@@ -16,7 +16,7 @@ def read_topics(
     repo = TopicRepository(db)
     return repo.get_all(offset=offset, limit=limit)
 
-@router.post("/", response_model=Topic)
+@router.post("", response_model=Topic)
 def create_topic(
     topic_in: TopicCreate,
     db: Session = Depends(get_db)

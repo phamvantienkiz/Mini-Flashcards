@@ -47,11 +47,11 @@
 - [x] (Backend) Create Alembic migration (Schema changes & migrate existing cards to "VSTEP READING")
 - [x] (Backend) Implement Topic Seeding script (30 predefined topics)
 - [x] (Backend) Implement Topic API endpoints and update Flashcard API (Filtering & New fields)
-- [ ] (Frontend) Implement Topic management page
-- [ ] (Frontend) Upgrade Flashcard Form: Searchable Combobox for Topics & "Quick Create Topic" button
-- [ ] (Frontend) Update Flashcard Form: Add `example_sentence` field
-- [ ] (Frontend) Update Flashcard UI: Display `example_sentence` on flip (back side)
-- [ ] (Frontend) Update Learning modules: Add Topic selection for Quiz and Writing
+- [x] (Frontend) Implement Topic management page
+- [x] (Frontend) Upgrade Flashcard Form: Searchable Combobox for Topics & "Quick Create Topic" button
+- [x] (Frontend) Update Flashcard Form: Add `example_sentence` field
+- [x] (Frontend) Update Flashcard UI: Display `example_sentence` on flip (back side)
+- [x] (Frontend) Update Learning modules: Add Topic selection for Quiz and Writing
 
 ---
 
@@ -62,3 +62,4 @@
 - 2026-04-18: Proposed detailed backend implementation plan using `uv` and Layered Architecture.
 - 2026-04-18: Successfully initialized FastAPI backend with `uv`, SQLAlchemy, Alembic, and implemented core features (CRUD, Quiz, Writing) following Layered Architecture.
 - 2026-04-20: Implemented Topic & Vocabulary backend features: Topic model/repo, updated Flashcard model, seeded 30 predefined topics, and migrated existing data via Alembic.
+- 2026-04-20: Completed Frontend implementation for Topic & Vocabulary: Topic management page, Searchable Combobox with quick create, Example sentences on cards, and Topic selection for learning modules. Following Apple Design Guidelines.

@@ -30,7 +30,9 @@ A starkly binary palette for a high-end, cinematic feel.
 ### 1.4 Visual Elements
 - **Radius**:
   - `8px` (Standard cards/buttons).
-  - `11px` (Search/Filter inputs).
+  - `11px` (Search/Filter/Select inputs).
+  - `12px` (Topic category cards).
+  - `14px` (Session selection elements).
   - `980px` (Pill CTAs).
 - **Shadow**: `rgba(0, 0, 0, 0.22) 3px 5px 30px 0px` for elevated product cards.
 - **Transitions**: 250ms `cubic-bezier(0.4, 0, 0.2, 1)` for all state changes.
@@ -42,21 +44,29 @@ A starkly binary palette for a high-end, cinematic feel.
 
 ### 2.1 The Flashcard (`Flashcard.tsx`)
 - **Aesthetic**: Borderless card with deep, soft Apple shadow.
-- **Front Side**: Large English word centered in semibold SF Pro Display.
-- **Back Side**: Vietnamese meaning centered.
+- **Front Side**: 
+  - Large English word centered in semibold SF Pro Display.
+  - **Topic Badge**: Subtle top-aligned badge for category context.
+- **Back Side**: 
+  - Vietnamese meaning centered.
+  - **Example Sentence**: Italicized English example at the bottom, separated by a light divider (`border-foreground/5`).
 - **Interaction**: Tactile 3D flip animation.
 
 ### 2.2 Navigation (`TopNav.tsx`)
 - **Aesthetic**: Translucent dark glass sticky bar at the top (48px height).
-- **Items**: Home, Add, Quiz, Writing.
+- **Items**: Home, Topics, Add Flashcard, Quiz, Writing.
 - **Active State**: Subtle white/50 opacity on the current link.
 
-### 2.3 Quiz Interface
-- **Progress Bar**: Apple Blue line at the top of the header.
-- **Options Area**: Clean grid of white cards with Apple shadow.
-- **Feedback**:
-  - Correct: Button background turns Emerald Blue.
-  - Incorrect: Button background turns Rose.
+### 2.3 Searchable Combobox (`SearchableCombobox.tsx`)
+- **Aesthetic**: Minimalist input-style trigger with a floating dropdown menu.
+- **Features**: 
+  - Real-time filtering.
+  - **Quick Create**: Ability to create a new Topic inline without leaving the form.
+  - Animation: `animate-in fade-in zoom-in` from the top.
+
+### 2.4 Pre-session Screen
+- **Aesthetic**: Immersive card-based modal before starting Quiz or Writing.
+- **Purpose**: Allows users to select a specific Topic to practice or choose "All Topics".
 
 ---
 
@@ -64,15 +74,27 @@ A starkly binary palette for a high-end, cinematic feel.
 
 ### 3.1 Dashboard (The Word List)
 - **Hero Section**: Dark background with large "My Collection" title and stats.
-- **Search Bar**: 11px radius input with blue focus ring.
+- **Controls**: 
+  - **Topic Filter**: Integrated dropdown for focused collection viewing.
+  - **Search Bar**: 11px radius input with blue focus ring.
 - **Word Grid**: Alternating light gray background with elevated product-style flashcards.
 
-### 3.2 Create Flashcard
+### 3.2 Topic Management (`/topics`)
+- **Aesthetic**: Grid of cards on Apple Gray background.
+- **Layout**: 
+  - Dark header with Topic creation form (Searchable style).
+  - Cards showing Topic name and "System" badge for predefined categories.
+  - Interactive scale effect on hover.
+
+### 3.3 Create Flashcard
 - **Header**: Immersive dark header with semibold title.
-- **Inputs**: Large, semibold inputs with tight letter-spacing for a bold, cinematic feel.
+- **Form**: 
+  - Integrated Topic Combobox for categorization.
+  - Large, semibold inputs for English and Vietnamese.
+  - Textarea for Example Sentence.
 - **Primary CTA**: Apple Blue button with 8px radius.
 
-### 3.3 Learning Modules (Quiz & Writing)
+### 3.4 Learning Modules (Quiz & Writing)
 - **Header**: Dark focus mode with progress bar and current question.
 - **Body**: Light gray area for interaction (options or writing input).
 - **Feedback**: Minimalistic notifications using Apple's color and shadow system.
@@ -82,7 +104,7 @@ A starkly binary palette for a high-end, cinematic feel.
 ## 4. Accessibility & Responsive Design
 - **Touch Targets**: Minimum 44x44px.
 - **SF Pro Optical Sizing**: Leverages OS-level optical sizing for readability.
-- **Safe Areas**: Padding for mobile notches.
+- **Safe Areas**: Padding for mobile notches and system indicators.
 
 ---
 
@@ -91,3 +113,4 @@ A starkly binary palette for a high-end, cinematic feel.
 - **Styling**: Tailwind CSS 4+ (using Apple design tokens).
 - **Animations**: Framer Motion / Motion.
 - **Typography**: Native System UI (SF Pro fallback chain).
+- **API Strategy**: Layered services (Flashcard, Topic, Learning) with a unified type-safe `apiClient`.

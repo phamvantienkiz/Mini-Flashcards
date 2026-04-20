@@ -14,7 +14,7 @@ from app.schemas.flashcard import (
 
 router = APIRouter()
 
-@router.get("/", response_model=FlashcardListResponse)
+@router.get("", response_model=FlashcardListResponse)
 def read_flashcards(
     offset: int = 0,
     limit: int = 20,
