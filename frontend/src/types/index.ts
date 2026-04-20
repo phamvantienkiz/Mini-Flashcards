@@ -1,7 +1,28 @@
+export interface Topic {
+  id: string;
+  name: string;
+  is_predefined: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface TopicSimple {
+  id: string;
+  name: string;
+}
+
+export interface TopicCreate {
+  name: string;
+  is_predefined?: boolean;
+}
+
 export interface Flashcard {
   id: string;
   english: string;
   vietnamese: string;
+  example_sentence: string | null;
+  topic_id: string | null;
+  topic?: TopicSimple | null;
   created_at: string;
   updated_at: string;
 }
@@ -9,11 +30,15 @@ export interface Flashcard {
 export interface FlashcardCreate {
   english: string;
   vietnamese: string;
+  example_sentence?: string | null;
+  topic_id?: string | null;
 }
 
 export interface FlashcardUpdate {
   english?: string;
   vietnamese?: string;
+  example_sentence?: string | null;
+  topic_id?: string | null;
 }
 
 export interface Pagination {

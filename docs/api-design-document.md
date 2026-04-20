@@ -18,6 +18,17 @@ Tài liệu này mô tả thiết kế REST API cho ứng dụng Mini-Flashcards
 | `id` | UUID | Định danh duy nhất (Server-generated) |
 | `english` | String | Từ vựng tiếng Anh |
 | `vietnamese` | String | Nghĩa tiếng Việt tương ứng |
+| `example_sentence` | String | Câu ví dụ tiếng Anh (Optional) |
+| `topic_id` | UUID | ID của chủ đề thuộc về (Optional) |
+| `created_at` | DateTime | Thời điểm tạo |
+| `updated_at` | DateTime | Thời điểm cập nhật cuối cùng |
+
+### 2.2 Topic
+| Attribute | Type | Description |
+|-----------|------|-------------|
+| `id` | UUID | Định danh duy nhất (Server-generated) |
+| `name` | String | Tên chủ đề (Unique) |
+| `is_predefined` | Boolean | Đánh dấu nếu là chủ đề hệ thống (Mặc định: false) |
 | `created_at` | DateTime | Thời điểm tạo |
 | `updated_at` | DateTime | Thời điểm cập nhật cuối cùng |
 
@@ -28,18 +39,25 @@ Tài liệu này mô tả thiết kế REST API cho ứng dụng Mini-Flashcards
 ### 3.1 Flashcard Management
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `GET` | `/flashcards` | Danh sách flashcards (Pagination & Search) |
+| `GET` | `/flashcards` | Danh sách flashcards (Pagination, Search & Topic filtering) |
 | `POST` | `/flashcards` | Tạo flashcard mới |
 | `GET` | `/flashcards/{id}` | Chi tiết một flashcard |
 | `PATCH` | `/flashcards/{id}` | Cập nhật một phần thông tin |
 | `DELETE` | `/flashcards/{id}` | Xóa flashcard |
 
-### 3.2 Learning & Stats
+### 3.2 Topic Management
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/topics` | Danh sách các chủ đề |
+| `POST` | `/topics` | Tạo chủ đề mới |
+| `GET` | `/topics/{id}` | Chi tiết một chủ đề |
+
+### 3.3 Learning & Stats
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | `GET` | `/flashcards/stats` | Thống kê tổng số lượng card |
-| `GET` | `/flashcards/quiz` | Lấy 10 câu hỏi trắc nghiệm ngẫu nhiên |
-| `GET` | `/flashcards/writing` | Lấy 10 câu hỏi luyện viết ngẫu nhiên |
+| `GET` | `/flashcards/quiz` | Lấy danh sách câu hỏi trắc nghiệm (Randomized & Topic filtering) |
+| `GET` | `/flashcards/writing` | Lấy danh sách câu hỏi luyện viết (Randomized & Topic filtering) |
 
 ---
 
@@ -49,8 +67,8 @@ Tài liệu này mô tả thiết kế REST API cho ứng dụng Mini-Flashcards
 openapi: "3.1.0"
 info:
   title: Mini-Flashcards API
-  version: "1.0.0"
-  description: API for managing flashcards and learning vocabulary.
+  version: "1.1.0"
+  description: API for managing flashcards, topics, and learning vocabulary.
 
 servers:
   - url: /api/v1
@@ -66,6 +84,10 @@ paths:
           in: query
           schema: { type: string }
           description: Search by English or Vietnamese text
+        - name: topic_id
+          in: query
+          schema: { type: string, format: uuid }
+          description: Filter by topic ID
         - name: offset
           in: query
           schema: { type: integer, default: 0 }
@@ -136,6 +158,57 @@ paths:
         "204":
           description: Deleted successfully
 
+  /topics:
+    get:
+      summary: List topics
+      tags: [Topics]
+      parameters:
+        - name: offset
+          in: query
+          schema: { type: integer, default: 0 }
+        - name: limit
+          in: query
+          schema: { type: integer, default: 100 }
+      responses:
+        "200":
+          description: List of topics
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: "#/components/schemas/Topic" }
+    post:
+      summary: Create a new topic
+      tags: [Topics]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/TopicCreate" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Topic" }
+
+  /topics/{id}:
+    get:
+      summary: Get topic details
+      tags: [Topics]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Topic" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
   /flashcards/stats:
     get:
       summary: Get summary statistics
@@ -154,6 +227,14 @@ paths:
     get:
       summary: Get randomized quiz questions
       tags: [Learning]
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, default: 10 }
+        - name: topic_id
+          in: query
+          schema: { type: string, format: uuid }
+          description: Filter quiz by topic
       responses:
         "200":
           description: List of quiz questions
@@ -167,6 +248,14 @@ paths:
     get:
       summary: Get randomized writing practice questions
       tags: [Learning]
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, default: 10 }
+        - name: topic_id
+          in: query
+          schema: { type: string, format: uuid }
+          description: Filter writing practice by topic
       responses:
         "200":
           description: List of writing prompts
@@ -184,6 +273,9 @@ components:
         id: { type: string, format: uuid, readOnly: true }
         english: { type: string }
         vietnamese: { type: string }
+        example_sentence: { type: string, nullable: true }
+        topic_id: { type: string, format: uuid, nullable: true }
+        topic: { $ref: "#/components/schemas/TopicSimple", nullable: true }
         created_at: { type: string, format: date-time, readOnly: true }
         updated_at: { type: string, format: date-time, readOnly: true }
 
@@ -193,12 +285,38 @@ components:
       properties:
         english: { type: string, minLength: 1 }
         vietnamese: { type: string, minLength: 1 }
+        example_sentence: { type: string, nullable: true }
+        topic_id: { type: string, format: uuid, nullable: true }
 
     FlashcardUpdate:
       type: object
       properties:
         english: { type: string }
         vietnamese: { type: string }
+        example_sentence: { type: string, nullable: true }
+        topic_id: { type: string, format: uuid, nullable: true }
+
+    Topic:
+      type: object
+      properties:
+        id: { type: string, format: uuid, readOnly: true }
+        name: { type: string }
+        is_predefined: { type: boolean }
+        created_at: { type: string, format: date-time, readOnly: true }
+        updated_at: { type: string, format: date-time, readOnly: true }
+
+    TopicCreate:
+      type: object
+      required: [name]
+      properties:
+        name: { type: string, minLength: 1 }
+        is_predefined: { type: boolean, default: false }
+
+    TopicSimple:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
 
     Pagination:
       type: object

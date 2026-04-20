@@ -5,34 +5,53 @@ import { Search, Loader2, PlusCircle } from "lucide-react";
 import { Flashcard as FlashcardComponent } from "@/components/shared/Flashcard";
 import { flashcardService } from "@/services/flashcard-service";
 import { statsService } from "@/services/stats-service";
-import { Flashcard, Stats } from "@/types";
+import { Flashcard, Stats, Topic } from "@/types";
 import Link from "next/link";
+import { topicService } from "@/services/topic-service";
 
 export default function Dashboard() {
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
+  const [topics, setTopics] = useState<Topic[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedTopicId, setSelectedTopicId] = useState("");
 
+  // Combined fetch for data to avoid redundant states and potential race conditions
   useEffect(() => {
+    let isMounted = true;
+
     const fetchData = async () => {
       try {
+        // Fetch topics only once if they are not already loaded
+        if (topics.length === 0) {
+          const topicsRes = await topicService.getAll();
+          if (isMounted) setTopics(topicsRes);
+        }
+
         const [flashcardsRes, statsRes] = await Promise.all([
-          flashcardService.getAll(searchQuery),
+          flashcardService.getAll(searchQuery, 0, 100, selectedTopicId),
           statsService.getStats(),
         ]);
-        setFlashcards(flashcardsRes.data);
-        setStats(statsRes);
+        
+        if (isMounted) {
+          setFlashcards(flashcardsRes.data);
+          setStats(statsRes);
+        }
       } catch (error) {
         console.error("Failed to fetch dashboard data:", error);
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
 
     const timer = setTimeout(fetchData, searchQuery ? 300 : 0);
-    return () => clearTimeout(timer);
-  }, [searchQuery]);
+    
+    return () => {
+      isMounted = false;
+      clearTimeout(timer);
+    };
+  }, [searchQuery, selectedTopicId]);
 
   const handleDelete = async (id: string) => {
     try {
@@ -65,16 +84,32 @@ export default function Dashboard() {
             </p>
           </div>
 
-          {/* Search Bar */}
-          <div className="relative group max-w-sm w-full">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 transition-colors group-focus-within:text-white" />
-            <input
-              type="text"
-              placeholder="Search words..."
-              className="w-full pl-11 pr-4 py-2.5 bg-white/10 border border-white/10 rounded-[11px] text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
+          <div className="flex flex-col sm:flex-row gap-4 max-w-xl w-full">
+            {/* Topic Filter */}
+            <select
+              className="px-4 py-2.5 bg-white/10 border border-white/10 rounded-[11px] text-white focus:outline-none focus:ring-2 focus:ring-primary transition-all text-[14px]"
+              value={selectedTopicId}
+              onChange={(e) => setSelectedTopicId(e.target.value)}
+            >
+              <option value="" className="bg-apple-near-black">All Topics</option>
+              {topics.map((t) => (
+                <option key={t.id} value={t.id} className="bg-apple-near-black">
+                  {t.name}
+                </option>
+              ))}
+            </select>
+
+            {/* Search Bar */}
+            <div className="relative group flex-1">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 transition-colors group-focus-within:text-white" />
+              <input
+                type="text"
+                placeholder="Search words..."
+                className="w-full pl-11 pr-4 py-2.5 bg-white/10 border border-white/10 rounded-[11px] text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -95,6 +130,8 @@ export default function Dashboard() {
                   id={card.id}
                   english={card.english}
                   vietnamese={card.vietnamese}
+                  example_sentence={card.example_sentence}
+                  topic={card.topic}
                   onDelete={handleDelete}
                   className="mx-auto"
                 />

@@ -1,5 +1,6 @@
 import random
-from typing import List
+from typing import List, Optional
+from uuid import UUID
 from sqlalchemy.orm import Session
 from sqlalchemy import select, func
 from app.models.flashcard import Flashcard
@@ -11,8 +12,8 @@ class LearningService:
         self.repo = FlashcardRepository(db)
         self.db = db
 
-    def get_quiz_questions(self, limit: int = 10) -> List[QuizQuestion]:
-        target_cards = self.repo.get_random(limit=limit)
+    def get_quiz_questions(self, limit: int = 10, topic_id: Optional[UUID] = None) -> List[QuizQuestion]:
+        target_cards = self.repo.get_random(limit=limit, topic_id=topic_id)
         questions = []
 
         for card in target_cards:
@@ -34,8 +35,8 @@ class LearningService:
             
         return questions
 
-    def get_writing_prompts(self, limit: int = 10) -> List[WritingPrompt]:
-        cards = self.repo.get_random(limit=limit)
+    def get_writing_prompts(self, limit: int = 10, topic_id: Optional[UUID] = None) -> List[WritingPrompt]:
+        cards = self.repo.get_random(limit=limit, topic_id=topic_id)
         return [
             WritingPrompt(
                 flashcard_id=card.id,

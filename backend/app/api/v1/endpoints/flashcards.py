@@ -15,17 +15,23 @@ from app.schemas.flashcard import (
 router = APIRouter()
 
 @router.get("", response_model=FlashcardListResponse)
-def list_flashcards(
+def read_flashcards(
     offset: int = 0,
     limit: int = 20,
     q: Optional[str] = None,
+    topic_id: Optional[UUID] = None,
     db: Session = Depends(get_db)
 ):
     service = FlashcardService(db)
-    data, total = service.get_flashcards(offset=offset, limit=limit, q=q)
+    data, total = service.get_flashcards(offset=offset, limit=limit, q=q, topic_id=topic_id)
+
     return FlashcardListResponse(
         data=data,
-        pagination=Pagination(total=total, offset=offset, limit=limit)
+        pagination=Pagination(
+            total=total,
+            offset=offset,
+            limit=limit
+        )
     )
 
 @router.post("", response_model=Flashcard, status_code=status.HTTP_201_CREATED)

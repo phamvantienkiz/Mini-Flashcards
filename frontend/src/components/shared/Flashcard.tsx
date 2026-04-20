@@ -9,11 +9,21 @@ interface FlashcardProps {
   id?: string;
   english: string;
   vietnamese: string;
+  example_sentence?: string | null;
+  topic?: { name: string } | null;
   className?: string;
   onDelete?: (id: string) => void;
 }
 
-export function Flashcard({ id, english, vietnamese, className, onDelete }: FlashcardProps) {
+export function Flashcard({
+  id,
+  english,
+  vietnamese,
+  example_sentence,
+  topic,
+  className,
+  onDelete,
+}: FlashcardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
 
   const handleDelete = (e: React.MouseEvent) => {
@@ -48,9 +58,16 @@ export function Flashcard({ id, english, vietnamese, className, onDelete }: Flas
               <Trash2 className="w-5 h-5" />
             </button>
           )}
-          <span className="text-[12px] font-semibold uppercase tracking-tight text-foreground/40 mb-6">
-            English
-          </span>
+          <div className="flex flex-col items-center">
+            {topic && (
+              <span className="mb-2 px-2 py-0.5 bg-primary/10 text-primary rounded-full text-[10px] font-bold uppercase tracking-widest">
+                {topic.name}
+              </span>
+            )}
+            <span className="text-[12px] font-semibold uppercase tracking-tight text-foreground/40 mb-6">
+              English
+            </span>
+          </div>
           <h2 className="text-4xl md:text-5xl font-semibold text-foreground tracking-tighter leading-tight">
             {english}
           </h2>
@@ -58,7 +75,7 @@ export function Flashcard({ id, english, vietnamese, className, onDelete }: Flas
 
         {/* Back Side */}
         <div
-          className="absolute inset-0 w-full h-full backface-hidden rounded-apple bg-surface apple-shadow flex flex-col items-center justify-center p-8 text-center border-none"
+          className="absolute inset-0 w-full h-full backface-hidden rounded-apple bg-surface apple-shadow flex flex-col items-center justify-center p-8 text-center border-none overflow-hidden"
           style={{ transform: "rotateY(180deg)" }}
         >
           {onDelete && id && (
@@ -70,12 +87,22 @@ export function Flashcard({ id, english, vietnamese, className, onDelete }: Flas
               <Trash2 className="w-5 h-5" />
             </button>
           )}
-          <span className="text-[12px] font-semibold uppercase tracking-tight text-foreground/40 mb-6">
-            Vietnamese
-          </span>
-          <h2 className="text-3xl md:text-4xl font-semibold text-foreground tracking-tighter leading-tight">
-            {vietnamese}
-          </h2>
+          <div className="w-full flex flex-col items-center">
+            <span className="text-[12px] font-semibold uppercase tracking-tight text-foreground/40 mb-6">
+              Vietnamese
+            </span>
+            <h2 className="text-3xl md:text-4xl font-semibold text-foreground tracking-tighter leading-tight">
+              {vietnamese}
+            </h2>
+            
+            {example_sentence && (
+              <div className="mt-8 pt-8 border-t border-foreground/5 w-full">
+                <p className="text-[14px] text-foreground/60 italic leading-relaxed px-4">
+                  "{example_sentence}"
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       </motion.div>
     </div>

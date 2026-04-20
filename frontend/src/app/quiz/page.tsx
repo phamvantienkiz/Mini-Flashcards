@@ -2,31 +2,37 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, RefreshCcw, X, Check, ArrowRight, Home } from "lucide-react";
+import { Loader2, RefreshCcw, X, Check, ArrowRight, Home, Play, BookOpen } from "lucide-react";
 import { learningService } from "@/services/learning-service";
-import { QuizQuestion } from "@/types";
+import { topicService } from "@/services/topic-service";
+import { QuizQuestion, Topic } from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { TopicPicker } from "@/components/ui/TopicPicker";
 
 export default function QuizPage() {
   const router = useRouter();
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
+  const [topics, setTopics] = useState<Topic[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [score, setScore] = useState(0);
   const [loading, setLoading] = useState(true);
   const [isFinished, setIsFinished] = useState(false);
+  const [isStarted, setIsStarted] = useState(false);
+  const [selectedTopicId, setSelectedTopicId] = useState("");
 
-  const fetchQuiz = useCallback(async () => {
+  const fetchQuiz = useCallback(async (topicId?: string) => {
     setLoading(true);
     try {
-      const data = await learningService.getQuiz();
+      const data = await learningService.getQuiz(10, topicId);
       setQuestions(data);
       setCurrentIndex(0);
       setSelectedAnswer(null);
       setScore(0);
       setIsFinished(false);
+      setIsStarted(true);
     } catch (error) {
       console.error("Failed to fetch quiz:", error);
     } finally {
@@ -35,10 +41,18 @@ export default function QuizPage() {
   }, []);
 
   useEffect(() => {
-    Promise.resolve().then(() => {
-      fetchQuiz();
-    });
-  }, [fetchQuiz]);
+    const fetchTopics = async () => {
+      try {
+        const data = await topicService.getAll();
+        setTopics(data);
+      } catch (error) {
+        console.error("Failed to fetch topics:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchTopics();
+  }, []);
 
   const handleAnswer = (option: string) => {
     if (selectedAnswer !== null) return;
@@ -57,7 +71,53 @@ export default function QuizPage() {
     }
   };
 
-  if (loading) {
+  if (loading && !isStarted) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center gap-6 bg-apple-gray">
+        <Loader2 className="w-10 h-10 text-primary animate-spin" />
+        <p className="text-foreground/40 text-[17px] font-normal tracking-tight animate-pulse">Preparing...</p>
+      </div>
+    );
+  }
+
+  // Pre-session Screen
+  if (!isStarted) {
+    return (
+      <main className="flex-1 w-full bg-apple-gray flex flex-col items-center justify-center p-6">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="max-w-md w-full bg-white rounded-[32px] apple-shadow p-10 text-center"
+        >
+          <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center text-primary mx-auto mb-8">
+            <BookOpen className="w-10 h-10" />
+          </div>
+          <h1 className="text-4xl font-semibold mb-4 tracking-tighter">Quiz Session</h1>
+          <p className="text-foreground/60 text-[17px] mb-10 leading-relaxed">
+            Choose a topic you'd like to focus on or challenge yourself with everything.
+          </p>
+
+          <div className="mb-12">
+            <TopicPicker
+              topics={topics}
+              value={selectedTopicId}
+              onChange={setSelectedTopicId}
+            />
+          </div>
+
+          <button
+            onClick={() => fetchQuiz(selectedTopicId)}
+            className="apple-button-primary w-full py-4 text-[17px] font-semibold flex items-center justify-center gap-3 scale-110"
+          >
+            <Play className="w-5 h-5 fill-current" />
+            Start Session
+          </button>
+        </motion.div>
+      </main>
+    );
+  }
+
+  if (loading && isStarted) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center gap-6 bg-apple-gray">
         <Loader2 className="w-10 h-10 text-primary animate-spin" />
@@ -69,16 +129,24 @@ export default function QuizPage() {
   if (questions.length === 0) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-6 text-center bg-apple-gray">
-        <h2 className="text-3xl font-semibold mb-6 tracking-tighter">Not enough cards</h2>
+        <h2 className="text-3xl font-semibold mb-6 tracking-tighter">No cards found</h2>
         <p className="text-foreground/60 mb-10 max-w-xs text-[17px] leading-relaxed">
-          You need at least 4 flashcards to start a multiple-choice quiz.
+          There are not enough flashcards in this topic to start a quiz.
         </p>
-        <Link
-          href="/create"
-          className="apple-button-primary scale-110"
-        >
-          Add More Cards
-        </Link>
+        <div className="flex flex-col gap-4 w-full max-w-xs mx-auto">
+          <button
+            onClick={() => setIsStarted(false)}
+            className="apple-button-primary py-4 text-[17px] font-semibold"
+          >
+            Change Topic
+          </button>
+          <Link
+            href="/create"
+            className="bg-white border border-black/5 py-4 rounded-apple font-semibold text-foreground apple-shadow"
+          >
+            Add More Cards
+          </Link>
+        </div>
       </div>
     );
   }
@@ -100,7 +168,7 @@ export default function QuizPage() {
         </motion.div>
         <div className="flex flex-col sm:flex-row gap-6 w-full max-w-md">
           <button
-            onClick={fetchQuiz}
+            onClick={() => setIsStarted(false)}
             className="flex-1 apple-button-primary py-4 text-[17px] font-semibold flex items-center justify-center gap-2"
           >
             <RefreshCcw className="w-4 h-4" />
@@ -142,7 +210,7 @@ export default function QuizPage() {
               Question {currentIndex + 1} of {questions.length}
             </span>
             <button
-              onClick={() => router.push("/")}
+              onClick={() => setIsStarted(false)}
               className="text-white/40 hover:text-white transition-colors p-1"
             >
               <X className="w-6 h-6" />
