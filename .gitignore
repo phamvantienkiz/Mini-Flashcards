@@ -35,3 +35,4 @@ ENV/
 *.db
 .pytest_cache/
 .mypy_cache/
+setupclaude.md
