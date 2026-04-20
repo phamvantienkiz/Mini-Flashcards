@@ -2,11 +2,14 @@ from typing import Optional
 from uuid import UUID
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict
+from .topic import TopicSimple
 
 # Common Schemas
 class FlashcardBase(BaseModel):
     english: str
     vietnamese: str
+    example_sentence: Optional[str] = None
+    topic_id: Optional[UUID] = None
 
 class FlashcardCreate(FlashcardBase):
     pass
@@ -14,11 +17,14 @@ class FlashcardCreate(FlashcardBase):
 class FlashcardUpdate(BaseModel):
     english: Optional[str] = None
     vietnamese: Optional[str] = None
+    example_sentence: Optional[str] = None
+    topic_id: Optional[UUID] = None
 
 class Flashcard(FlashcardBase):
     id: UUID
     created_at: datetime
     updated_at: datetime
+    topic: Optional[TopicSimple] = None
 
     model_config = ConfigDict(from_attributes=True)
 

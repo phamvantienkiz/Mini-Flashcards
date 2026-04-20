@@ -9,22 +9,26 @@ class FlashcardRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    def get_all(self, offset: int = 0, limit: int = 20, q: Optional[str] = None) -> List[Flashcard]:
+    def get_all(self, offset: int = 0, limit: int = 20, q: Optional[str] = None, topic_id: Optional[UUID] = None) -> List[Flashcard]:
         query = select(Flashcard)
         if q:
             query = query.filter(
                 (Flashcard.english.ilike(f"%{q}%")) | 
                 (Flashcard.vietnamese.ilike(f"%{q}%"))
             )
+        if topic_id:
+            query = query.filter(Flashcard.topic_id == topic_id)
         return self.db.execute(query.offset(offset).limit(limit)).scalars().all()
 
-    def count(self, q: Optional[str] = None) -> int:
+    def count(self, q: Optional[str] = None, topic_id: Optional[UUID] = None) -> int:
         query = select(func.count(Flashcard.id))
         if q:
             query = query.filter(
                 (Flashcard.english.ilike(f"%{q}%")) | 
                 (Flashcard.vietnamese.ilike(f"%{q}%"))
             )
+        if topic_id:
+            query = query.filter(Flashcard.topic_id == topic_id)
         return self.db.execute(query).scalar() or 0
 
     def get_by_id(self, id: UUID) -> Optional[Flashcard]:
@@ -33,7 +37,9 @@ class FlashcardRepository:
     def create(self, obj_in: FlashcardCreate) -> Flashcard:
         db_obj = Flashcard(
             english=obj_in.english,
-            vietnamese=obj_in.vietnamese
+            vietnamese=obj_in.vietnamese,
+            example_sentence=obj_in.example_sentence,
+            topic_id=obj_in.topic_id
         )
         self.db.add(db_obj)
         self.db.commit()
@@ -57,7 +63,10 @@ class FlashcardRepository:
         self.db.commit()
         return True
 
-    def get_random(self, limit: int = 10) -> List[Flashcard]:
+    def get_random(self, limit: int = 10, topic_id: Optional[UUID] = None) -> List[Flashcard]:
+        query = select(Flashcard)
+        if topic_id:
+            query = query.filter(Flashcard.topic_id == topic_id)
         return self.db.execute(
-            select(Flashcard).order_by(func.random()).limit(limit)
+            query.order_by(func.random()).limit(limit)
         ).scalars().all()

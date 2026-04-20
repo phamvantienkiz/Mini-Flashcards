@@ -42,11 +42,11 @@
 
 ### Feature 4: Topic & Vocabulary Example
 
-- [ ] (Backend) Implement `Topic` Model and Repository
-- [ ] (Backend) Update `Flashcard` Model with `topic_id` and `example_sentence`
-- [ ] (Backend) Create Alembic migration (Schema changes & migrate existing cards to "VSTEP READING")
-- [ ] (Backend) Implement Topic Seeding script (30 predefined topics)
-- [ ] (Backend) Implement Topic API endpoints and update Flashcard API (Filtering & New fields)
+- [x] (Backend) Implement `Topic` Model and Repository
+- [x] (Backend) Update `Flashcard` Model with `topic_id` and `example_sentence`
+- [x] (Backend) Create Alembic migration (Schema changes & migrate existing cards to "VSTEP READING")
+- [x] (Backend) Implement Topic Seeding script (30 predefined topics)
+- [x] (Backend) Implement Topic API endpoints and update Flashcard API (Filtering & New fields)
 - [ ] (Frontend) Implement Topic management page
 - [ ] (Frontend) Upgrade Flashcard Form: Searchable Combobox for Topics & "Quick Create Topic" button
 - [ ] (Frontend) Update Flashcard Form: Add `example_sentence` field
@@ -61,3 +61,4 @@
 - 2026-04-18: Completed analysis and drafted PRD/SRS for Phase 1 in `docs/project-requirements-document.md`.
 - 2026-04-18: Proposed detailed backend implementation plan using `uv` and Layered Architecture.
 - 2026-04-18: Successfully initialized FastAPI backend with `uv`, SQLAlchemy, Alembic, and implemented core features (CRUD, Quiz, Writing) following Layered Architecture.
+- 2026-04-20: Implemented Topic & Vocabulary backend features: Topic model/repo, updated Flashcard model, seeded 30 predefined topics, and migrated existing data via Alembic.
