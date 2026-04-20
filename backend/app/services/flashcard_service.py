@@ -8,9 +8,9 @@ class FlashcardService:
     def __init__(self, db: Session):
         self.repo = FlashcardRepository(db)
 
-    def get_flashcards(self, offset: int = 0, limit: int = 20, q: Optional[str] = None) -> Tuple[List[Flashcard], int]:
-        data = self.repo.get_all(offset=offset, limit=limit, q=q)
-        total = self.repo.count(q=q)
+    def get_flashcards(self, offset: int = 0, limit: int = 20, q: Optional[str] = None, topic_id: Optional[UUID] = None) -> Tuple[List[Flashcard], int]:
+        data = self.repo.get_all(offset=offset, limit=limit, q=q, topic_id=topic_id)
+        total = self.repo.count(q=q, topic_id=topic_id)
         return data, total
 
     def get_flashcard(self, id: UUID) -> Optional[Flashcard]:

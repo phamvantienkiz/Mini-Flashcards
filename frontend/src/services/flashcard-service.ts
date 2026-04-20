@@ -2,12 +2,13 @@ import { apiClient } from "@/lib/api-client";
 import { Flashcard, FlashcardCreate, FlashcardUpdate, PaginatedResponse } from "@/types";
 
 export const flashcardService = {
-  getAll: (q?: string, offset = 0, limit = 20) => {
+  getAll: (q?: string, offset = 0, limit = 20, topicId?: string) => {
     const params = new URLSearchParams({
       offset: offset.toString(),
       limit: limit.toString(),
     });
     if (q) params.append("q", q);
+    if (topicId) params.append("topic_id", topicId);
     return apiClient<PaginatedResponse<Flashcard>>(`/flashcards?${params.toString()}`);
   },
 

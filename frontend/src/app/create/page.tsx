@@ -5,10 +5,13 @@ import { ArrowLeft, Loader2, CheckCircle2 } from "lucide-react";
 import { flashcardService } from "@/services/flashcard-service";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { SearchableCombobox } from "@/components/ui/SearchableCombobox";
 
 export default function CreateFlashcard() {
   const [english, setEnglish] = useState("");
   const [vietnamese, setVietnamese] = useState("");
+  const [exampleSentence, setExampleSentence] = useState("");
+  const [topicId, setTopicId] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
@@ -18,10 +21,17 @@ export default function CreateFlashcard() {
 
     setIsSubmitting(true);
     try {
-      await flashcardService.create({ english, vietnamese });
+      await flashcardService.create({
+        english,
+        vietnamese,
+        example_sentence: exampleSentence || null,
+        topic_id: topicId || null,
+      });
       setShowSuccess(true);
       setEnglish("");
       setVietnamese("");
+      setExampleSentence("");
+      // Keep topicId as requested for better UX when adding multiple cards
       setTimeout(() => setShowSuccess(false), 2000);
     } catch (error) {
       console.error("Failed to create flashcard:", error);
@@ -39,69 +49,102 @@ export default function CreateFlashcard() {
 
   return (
     <main className="flex-1 w-full">
-      {/* Header - Dark */}
-      <section className="bg-black text-white pt-24 pb-16 px-6">
+      {/* Header - Dark - Reduced Padding */}
+      <section className="bg-black text-white pt-20 pb-12 px-6">
         <div className="max-w-2xl mx-auto">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-white/40 hover:text-white transition-colors mb-8 group"
+            className="inline-flex items-center gap-2 text-white/40 hover:text-white transition-colors mb-6 group"
           >
             <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
             <span className="text-[12px] font-semibold uppercase tracking-tight">
               Collection
             </span>
           </Link>
-          <h1 className="text-5xl md:text-6xl font-semibold mb-4 tracking-tighter">
+          <h1 className="text-4xl md:text-5xl font-semibold mb-3 tracking-tighter">
             Add Flashcard
           </h1>
-          <p className="text-white/60 text-[21px] font-normal tracking-tight">
+          <p className="text-white/60 text-[17px] font-normal tracking-tight">
             Build your vocabulary one word at a time.
           </p>
         </div>
       </section>
 
-      {/* Form Area - Light Gray */}
-      <section className="bg-apple-gray py-20 px-6 min-h-[50vh]">
+      {/* Form Area - Light Gray - Optimized Spacing */}
+      <section className="bg-apple-gray py-12 px-6 min-h-[50vh]">
         <div className="max-w-2xl mx-auto">
-          <form onSubmit={handleSubmit} className="space-y-16" onKeyDown={handleKeyDown}>
-            <div className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-10" onKeyDown={handleKeyDown}>
+            {/* Topic Selection */}
+            <div className="space-y-3">
               <label
-                htmlFor="english"
-                className="text-foreground/40 text-[12px] font-semibold uppercase tracking-tight"
+                className="text-foreground/40 text-[11px] font-bold uppercase tracking-widest"
               >
-                English Word
+                Topic
               </label>
-              <input
-                id="english"
-                type="text"
-                placeholder="e.g. Ephemeral"
-                autoFocus
-                className="w-full bg-transparent border-b border-foreground/10 py-4 text-4xl md:text-5xl font-semibold focus:outline-none focus:border-primary transition-colors placeholder:text-foreground/10 tracking-tighter"
-                value={english}
-                onChange={(e) => setEnglish(e.target.value)}
-                required
+              <SearchableCombobox 
+                value={topicId} 
+                onChange={setTopicId} 
+                placeholder="Choose a topic (optional)..."
               />
             </div>
 
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              <div className="space-y-3">
+                <label
+                  htmlFor="english"
+                  className="text-foreground/40 text-[11px] font-bold uppercase tracking-widest"
+                >
+                  English Word
+                </label>
+                <input
+                  id="english"
+                  type="text"
+                  placeholder="e.g. ephemeral"
+                  autoFocus
+                  className="w-full bg-transparent border-b border-foreground/10 py-3 text-2xl font-semibold focus:outline-none focus:border-primary transition-colors placeholder:text-foreground/10 tracking-tight"
+                  value={english}
+                  onChange={(e) => setEnglish(e.target.value.toLowerCase())}
+                  required
+                />
+              </div>
+
+              <div className="space-y-3">
+                <label
+                  htmlFor="vietnamese"
+                  className="text-foreground/40 text-[11px] font-bold uppercase tracking-widest"
+                >
+                  Vietnamese Meaning
+                </label>
+                <input
+                  id="vietnamese"
+                  type="text"
+                  placeholder="e.g. phù du"
+                  className="w-full bg-transparent border-b border-foreground/10 py-3 text-2xl font-semibold focus:outline-none focus:border-primary transition-colors placeholder:text-foreground/10 tracking-tight"
+                  value={vietnamese}
+                  onChange={(e) => setVietnamese(e.target.value.toLowerCase())}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="space-y-3">
               <label
-                htmlFor="vietnamese"
-                className="text-foreground/40 text-[12px] font-semibold uppercase tracking-tight"
+                htmlFor="example"
+                className="text-foreground/40 text-[11px] font-bold uppercase tracking-widest"
               >
-                Vietnamese Meaning
+                Example Sentence (Optional)
               </label>
-              <input
-                id="vietnamese"
-                type="text"
-                placeholder="e.g. Phù du, chóng tàn"
-                className="w-full bg-transparent border-b border-foreground/10 py-4 text-2xl md:text-3xl font-medium focus:outline-none focus:border-primary transition-colors placeholder:text-foreground/10 tracking-tight"
-                value={vietnamese}
-                onChange={(e) => setVietnamese(e.target.value)}
-                required
+              <textarea
+                id="example"
+                placeholder="How is this word used in a sentence?"
+                rows={2}
+                className="w-full bg-transparent border-b border-foreground/10 py-3 text-[17px] font-normal focus:outline-none focus:border-primary transition-colors placeholder:text-foreground/10 tracking-tight resize-none"
+                value={exampleSentence}
+                onChange={(e) => setExampleSentence(e.target.value)}
               />
             </div>
 
-            <div className="pt-10 flex flex-col gap-6">
+            <div className="pt-6 flex flex-col gap-4">
               <button
                 type="submit"
                 disabled={!english || !vietnamese || isSubmitting}
