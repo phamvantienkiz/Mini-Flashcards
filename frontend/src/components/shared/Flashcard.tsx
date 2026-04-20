@@ -60,7 +60,7 @@ export function Flashcard({
           )}
           <div className="flex flex-col items-center">
             {topic && (
-              <span className="mb-2 px-2 py-0.5 bg-black/5 rounded-full text-[10px] font-medium text-foreground/40 uppercase tracking-widest">
+              <span className="mb-2 px-2 py-0.5 bg-primary/10 text-primary rounded-full text-[10px] font-bold uppercase tracking-widest">
                 {topic.name}
               </span>
             )}

@@ -9,6 +9,7 @@ import { QuizQuestion, Topic } from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { TopicPicker } from "@/components/ui/TopicPicker";
 
 export default function QuizPage() {
   const router = useRouter();
@@ -96,20 +97,12 @@ export default function QuizPage() {
             Choose a topic you'd like to focus on or challenge yourself with everything.
           </p>
 
-          <div className="space-y-4 mb-10 text-left">
-            <label className="text-[12px] font-semibold uppercase tracking-tight text-foreground/40 ml-1">
-              Select Topic
-            </label>
-            <select
-              className="w-full px-4 py-4 bg-apple-gray rounded-[14px] text-[17px] font-medium focus:outline-none focus:ring-2 focus:ring-primary transition-all appearance-none"
+          <div className="mb-12">
+            <TopicPicker
+              topics={topics}
               value={selectedTopicId}
-              onChange={(e) => setSelectedTopicId(e.target.value)}
-            >
-              <option value="">All Topics</option>
-              {topics.map((t) => (
-                <option key={t.id} value={t.id}>{t.name}</option>
-              ))}
-            </select>
+              onChange={setSelectedTopicId}
+            />
           </div>
 
           <button

@@ -9,6 +9,7 @@ import { WritingPrompt, Topic } from "@/types";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { TopicPicker } from "@/components/ui/TopicPicker";
 
 export default function WritingPage() {
   const router = useRouter();
@@ -106,20 +107,12 @@ export default function WritingPage() {
             Test your spelling and recall. Translate Vietnamese meanings into English.
           </p>
 
-          <div className="space-y-4 mb-10 text-left">
-            <label className="text-[12px] font-semibold uppercase tracking-tight text-foreground/40 ml-1">
-              Select Topic
-            </label>
-            <select
-              className="w-full px-4 py-4 bg-apple-gray rounded-[14px] text-[17px] font-medium focus:outline-none focus:ring-2 focus:ring-primary transition-all appearance-none"
+          <div className="mb-12">
+            <TopicPicker
+              topics={topics}
               value={selectedTopicId}
-              onChange={(e) => setSelectedTopicId(e.target.value)}
-            >
-              <option value="">All Topics</option>
-              {topics.map((t) => (
-                <option key={t.id} value={t.id}>{t.name}</option>
-              ))}
-            </select>
+              onChange={setSelectedTopicId}
+            />
           </div>
 
           <button
@@ -172,8 +165,8 @@ export default function WritingPage() {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-6 text-center bg-apple-gray">
         <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
           className="mb-12"
         >
           <div className="text-7xl mb-6">✍️</div>

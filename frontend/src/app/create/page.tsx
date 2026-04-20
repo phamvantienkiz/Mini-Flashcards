@@ -31,7 +31,7 @@ export default function CreateFlashcard() {
       setEnglish("");
       setVietnamese("");
       setExampleSentence("");
-      setTopicId("");
+      // Keep topicId as requested for better UX when adding multiple cards
       setTimeout(() => setShowSuccess(false), 2000);
     } catch (error) {
       console.error("Failed to create flashcard:", error);
@@ -49,35 +49,35 @@ export default function CreateFlashcard() {
 
   return (
     <main className="flex-1 w-full">
-      {/* Header - Dark */}
-      <section className="bg-black text-white pt-24 pb-16 px-6">
+      {/* Header - Dark - Reduced Padding */}
+      <section className="bg-black text-white pt-20 pb-12 px-6">
         <div className="max-w-2xl mx-auto">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-white/40 hover:text-white transition-colors mb-8 group"
+            className="inline-flex items-center gap-2 text-white/40 hover:text-white transition-colors mb-6 group"
           >
             <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
             <span className="text-[12px] font-semibold uppercase tracking-tight">
               Collection
             </span>
           </Link>
-          <h1 className="text-5xl md:text-6xl font-semibold mb-4 tracking-tighter">
+          <h1 className="text-4xl md:text-5xl font-semibold mb-3 tracking-tighter">
             Add Flashcard
           </h1>
-          <p className="text-white/60 text-[21px] font-normal tracking-tight">
+          <p className="text-white/60 text-[17px] font-normal tracking-tight">
             Build your vocabulary one word at a time.
           </p>
         </div>
       </section>
 
-      {/* Form Area - Light Gray */}
-      <section className="bg-apple-gray py-20 px-6 min-h-[50vh]">
+      {/* Form Area - Light Gray - Optimized Spacing */}
+      <section className="bg-apple-gray py-12 px-6 min-h-[50vh]">
         <div className="max-w-2xl mx-auto">
-          <form onSubmit={handleSubmit} className="space-y-16" onKeyDown={handleKeyDown}>
+          <form onSubmit={handleSubmit} className="space-y-10" onKeyDown={handleKeyDown}>
             {/* Topic Selection */}
-            <div className="space-y-4">
+            <div className="space-y-3">
               <label
-                className="text-foreground/40 text-[12px] font-semibold uppercase tracking-tight"
+                className="text-foreground/40 text-[11px] font-bold uppercase tracking-widest"
               >
                 Topic
               </label>
@@ -88,49 +88,49 @@ export default function CreateFlashcard() {
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-              <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+              <div className="space-y-3">
                 <label
                   htmlFor="english"
-                  className="text-foreground/40 text-[12px] font-semibold uppercase tracking-tight"
+                  className="text-foreground/40 text-[11px] font-bold uppercase tracking-widest"
                 >
                   English Word
                 </label>
                 <input
                   id="english"
                   type="text"
-                  placeholder="e.g. Ephemeral"
+                  placeholder="e.g. ephemeral"
                   autoFocus
-                  className="w-full bg-transparent border-b border-foreground/10 py-4 text-3xl font-semibold focus:outline-none focus:border-primary transition-colors placeholder:text-foreground/10 tracking-tighter"
+                  className="w-full bg-transparent border-b border-foreground/10 py-3 text-2xl font-semibold focus:outline-none focus:border-primary transition-colors placeholder:text-foreground/10 tracking-tight"
                   value={english}
-                  onChange={(e) => setEnglish(e.target.value)}
+                  onChange={(e) => setEnglish(e.target.value.toLowerCase())}
                   required
                 />
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <label
                   htmlFor="vietnamese"
-                  className="text-foreground/40 text-[12px] font-semibold uppercase tracking-tight"
+                  className="text-foreground/40 text-[11px] font-bold uppercase tracking-widest"
                 >
                   Vietnamese Meaning
                 </label>
                 <input
                   id="vietnamese"
                   type="text"
-                  placeholder="e.g. Phù du"
-                  className="w-full bg-transparent border-b border-foreground/10 py-4 text-3xl font-semibold focus:outline-none focus:border-primary transition-colors placeholder:text-foreground/10 tracking-tight"
+                  placeholder="e.g. phù du"
+                  className="w-full bg-transparent border-b border-foreground/10 py-3 text-2xl font-semibold focus:outline-none focus:border-primary transition-colors placeholder:text-foreground/10 tracking-tight"
                   value={vietnamese}
-                  onChange={(e) => setVietnamese(e.target.value)}
+                  onChange={(e) => setVietnamese(e.target.value.toLowerCase())}
                   required
                 />
               </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-3">
               <label
                 htmlFor="example"
-                className="text-foreground/40 text-[12px] font-semibold uppercase tracking-tight"
+                className="text-foreground/40 text-[11px] font-bold uppercase tracking-widest"
               >
                 Example Sentence (Optional)
               </label>
@@ -138,13 +138,13 @@ export default function CreateFlashcard() {
                 id="example"
                 placeholder="How is this word used in a sentence?"
                 rows={2}
-                className="w-full bg-transparent border-b border-foreground/10 py-4 text-[21px] font-normal focus:outline-none focus:border-primary transition-colors placeholder:text-foreground/10 tracking-tight resize-none"
+                className="w-full bg-transparent border-b border-foreground/10 py-3 text-[17px] font-normal focus:outline-none focus:border-primary transition-colors placeholder:text-foreground/10 tracking-tight resize-none"
                 value={exampleSentence}
                 onChange={(e) => setExampleSentence(e.target.value)}
               />
             </div>
 
-            <div className="pt-10 flex flex-col gap-6">
+            <div className="pt-6 flex flex-col gap-4">
               <button
                 type="submit"
                 disabled={!english || !vietnamese || isSubmitting}
